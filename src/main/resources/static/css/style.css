@@ -1,0 +1,37 @@
+#wrap {
+	width:1550px;
+	height:700px;
+}
+
+header {
+	height:80px;
+	background-color:purple;
+	border-bottom:1px solid ;
+}
+
+section {
+	height:600px;
+}
+
+section > #login-box {
+	width:500px;
+	background-color:#dddddd;
+	border:1px solid gray;
+	border-radius:3px;
+}
+
+section > #signup-box {
+	width:500px;
+	background-color:#dddddd;
+	border:1px solid gray;
+	border-radius:3px;
+}
+
+#hr-box {
+	height:50px;
+}
+
+footer {
+	height:70px;
+	background-color:purple;	
+}
