@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.allured.marondalgram.common.EncryptUtils;
 import com.allured.marondalgram.user.dao.UserDAO;
+import com.allured.marondalgram.user.model.User;
 
 @Service
 public class UserBO {
@@ -18,5 +19,23 @@ public class UserBO {
 			, String password) {
 		String encryptPassword = EncryptUtils.md5(password);
 		return userDAO.insertUserInfo(loginId, name, nickname, email, encryptPassword);
+	}
+	
+	public boolean idDuplicateCheck(
+			String loginId) {
+		
+		if(userDAO.selectUserInfoById(loginId) == 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	public User login(String loginId
+			, String password) {
+		
+		String encryptPassword = EncryptUtils.md5(password);
+		return userDAO.selectUserInfoByIdPassword(loginId, encryptPassword);
 	}
 }

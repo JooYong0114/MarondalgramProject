@@ -15,13 +15,15 @@
 <body>
 	<div id="wrap">
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
-		<section class="d-flex justify-content-center align-items-center mt-5">
-		<div id="login-box" class="w-50">
+		<section class="d-flex justify-content-center align-items-center mb-5">
+		<div id="login-box">
 			<div class="h-100 d-flex flex-column justify-content-center align-items-center">
-				<h1 class="text-center mt-5"><i>Marondalgram</i></h1>
-				<input type="text" id="loginIdInput" class="form-control mt-5 w-50" name="loginId" placeholder="아이디">
-				<input type="password" id="passwordInput"  class="form-control mt-3 w-50" name="password" placeholder="비밀번호">
-				<button type="submit" id="loginBtn" class="btn btn-primary mt-3 w-50">로그인</button>
+				<form id="loginForm" method="post" action="/user/sign_in">
+				<h1 class="text-center"><i>Marondalgram</i></h1>
+				<input type="text" id="loginIdInput" class="form-control mt-5 w-100" name="loginId" placeholder="아이디">
+				<input type="password" id="passwordInput"  class="form-control mt-3 w-100" name="password" placeholder="비밀번호">
+				<button type="submit" id="loginBtn" class="btn btn-primary mt-3 w-100">로그인</button>
+				</form>
 				<div id="hr-box" class="w-50 mt-3">
 				<hr>
 				</div>
@@ -37,18 +39,38 @@
 	
 	<script>
 		$(document).ready(function() {
-			$("#loginBtn").on("click", function() {
+			$("#loginForm").on("submit", function(event) {
+				
+				event.preventDefault();
+				
 				var loginId = $("#loginIdInput").val().trim();
 				var password = $("#passwordInput").val();
 				
 				if(loginId == null || loginId == "") {
 					alert("아이디를 입력하세요.");
-					return;
+					return false;
 				}
 				if(password == null || password == "") {
 					alert("패스워드를 입력하세요.");
-					return;
+					return false;
 				}
+				
+				$.ajax({
+					type:"post",
+					url:"/user/sign_in",
+					data:{"loginId":loginId, "password":password},
+					success:function(data) {
+						if(data.result == "success") {
+							location.href="/feed/main_view";
+						}
+						else {
+							alert("아이디 또는 비밀번호를 확인하세요.");							
+						}
+					},
+					error:function(e) {
+						alert("error");
+					}
+				});
 			});
 		});
 	</script>

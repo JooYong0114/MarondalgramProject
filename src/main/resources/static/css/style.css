@@ -1,6 +1,5 @@
 #wrap {
 	width:1550px;
-	height:700px;
 }
 
 header {
@@ -9,22 +8,77 @@ header {
 	border-bottom:1px solid ;
 }
 
-section {
-	height:600px;
-}
-
 section > #login-box {
-	width:500px;
+	width:550px;
+	height:700px;
 	background-color:#dddddd;
 	border:1px solid gray;
 	border-radius:3px;
 }
 
 section > #signup-box {
-	width:500px;
+	width:550px;
+	height:700px;
 	background-color:#dddddd;
 	border:1px solid gray;
 	border-radius:3px;
+}
+
+#story-box {
+	width:600px;
+	height:100px;
+	background-color:#dddddd;
+	border:1px solid gray;
+	border-radius:3px;
+}
+
+#feed-box {
+	width:600px;
+	background-color:#dddddd;
+	border:1px solid gray;
+	border-radius:3px;
+}
+
+#story-user-profile {
+	cursor:pointer;
+}
+
+#feed-user-profile {
+	cursor:pointer;
+}
+
+.story-profileImgs {
+	width:50px;
+	height:50px;
+	border-radius:50px;
+}
+
+.feed-profileImgs {
+	width:35px;
+	height:35px;
+	border-radius:35px;
+}
+
+#feed-imgVideo {
+	height:400px;
+	background-color:red;
+}
+
+.like-icon, .comment-icon {
+	width:25px;
+	height:25px;
+}
+
+.like-box {
+	cursor:pointer;
+}
+
+.like-count {
+	font-weight:bold;
+}
+
+.moreBtn {
+	cursor:pointer;
 }
 
 #hr-box {
