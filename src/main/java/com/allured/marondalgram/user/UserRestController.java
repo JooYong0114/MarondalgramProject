@@ -70,6 +70,7 @@ public class UserRestController {
 		if(user != null) {
 			HttpSession hs = request.getSession();
 			
+			hs.setAttribute("userId", user.getId());
 			hs.setAttribute("userLoginId", user.getLoginId());
 			hs.setAttribute("userName", user.getName());
 			hs.setAttribute("userNickname", user.getNickname());

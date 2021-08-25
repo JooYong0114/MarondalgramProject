@@ -59,9 +59,9 @@ section > #signup-box {
 	border-radius:35px;
 }
 
-#feed-imgVideo {
+.feed-imgVideo {
 	height:400px;
-	background-color:red;
+	background-color:blue;
 }
 
 .like-icon, .comment-icon {
