@@ -36,5 +36,39 @@
  			, `updatedAt`
  		FROM
  			`feed`
+ 		ORDER BY `id` DESC
  	</select>
+ 	
+ 	<insert id="insertLike" parameterType="map">
+ 		INSERT INTO
+ 			`like`
+ 		(
+ 			`feedId`
+ 			, `userId`
+ 			, `createdAt`
+ 		) VALUES
+ 		(
+ 			#{feedId}
+ 			, #{userId}
+ 			, now()
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectLikeCount" parameterType="map" resultType="com.allured.marondalgram.feed.model.Like">
+ 		SELECT 
+ 			COUNT(1)
+ 		FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 		AND `userId` = ${userId}	
+ 	</select>
+ 	
+ 	<delete id="deleteLike" parameterType="int">
+ 		DELETE FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 		AND `userId` = ${userId}
+ 	</delete>
  </mapper>

@@ -29,4 +29,16 @@ public class FeedBO {
 	public List<Feed> getFeedList() {
 		return feedDAO.selectFeedList();
 	}
+	
+	public int addLike(int feedId, int userId) {
+		return feedDAO.insertLike(feedId, userId);
+	}
+	
+	public int getLikeCount(int feedId, int userId) {
+		return feedDAO.selectLikeCount(feedId, userId);
+	}
+	
+	public int deleteLike(int feedId, int userId) {
+		return feedDAO.deleteLike(feedId, userId);
+	}
 }

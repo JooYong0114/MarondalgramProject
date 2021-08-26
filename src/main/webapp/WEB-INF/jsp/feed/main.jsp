@@ -64,21 +64,27 @@
 					</div>
 					<div class="d-flex justify-content-center align-items-center">
 						<div class="w-100 feed-imgVideo">
-							<img src="${feed.imgUrl }" alt="feedImage">
+							<img class="w-100 h-100" src="${feed.imgUrl }" alt="feedImage">
 						</div>
 					</div>
 					<div class="w-100">
 					<hr>
 					</div>
 					<div class="d-flex align-items-center">
+						<script>
+							feedId = ${feed.id }
+							userId = ${feed.userId}
+						</script>
 						<div class="like-box d-flex align-items-center">
 							<img class="ml-4 like-icon" src="/static/media/heart-empty.png" alt="like">
 							<span class="ml-2"><b>좋아요</b></span>
+							<span class="ml-2 like-count">1234</span><b>개</b>
 						</div>
-						<span class="ml-2 like-count">1234</span><span><b>개</b></span>
-						<img class="ml-4 comment-icon" src="/static/media/comment-icon.png" alt="comment">
-						<span class="ml-2"><b>댓글</b></span>
-						<span class="ml-2"><b>12개</b></span>
+						<div class="comment-box d-flex align-items-center">
+							<img class="ml-4 comment-icon" src="/static/media/comment-icon.png" alt="comment">
+							<span class="ml-2"><b>댓글</b></span>
+							<span class="ml-2 comment-count"><b>12</b></span><b>개</b>
+						</div>
 					</div>
 					<div class="d-flex mt-2">
 						<div class="ml-4"><b>${feed.userNickname }</b></div>
@@ -179,16 +185,21 @@
 			});
 			
 			$(".like-box").on("click", function() {
+				feedId;
+				userId;
+				
 				var likeImg = $(this).children("img");
-				var likeCount = parseInt($(this).next().text());
+				var likeCount = parseInt($(this).children(".like-count").text());
+				// alert(feedId);
+				alert(userId);
 				
 				if(likeImg.attr("src") == "/static/media/heart-empty.png") {
 					likeImg.attr("src", "/static/media/heart-fill.png");
-					$(this).next().text(likeCount + 1);
+					$(this).children(".like-count").text(likeCount + 1);
 				}
 				else {
 					likeImg.attr("src", "/static/media/heart-empty.png");
-					$(this).next().text(likeCount - 1);
+					$(this).children(".like-count").text(likeCount - 1);
 				}
 			});
 			

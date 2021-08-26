@@ -16,4 +16,13 @@ public interface FeedDAO {
 			, @Param("imgUrl") String imageUrl);
 	
 	public List<Feed> selectFeedList();
+	
+	public int insertLike(@Param("feedId") int feedId
+			, @Param("userId") int userId);
+	
+	public int selectLikeCount(@Param("feedId") int feedId
+			, @Param("userId") int userId);
+	
+	public int deleteLike(@Param("feedId") int feedId
+			, @Param("userId") int userId);
 }

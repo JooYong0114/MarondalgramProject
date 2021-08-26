@@ -39,11 +39,7 @@ section > #signup-box {
 	border-radius:3px;
 }
 
-#story-user-profile {
-	cursor:pointer;
-}
-
-#feed-user-profile {
+#story-user-profile, #feed-user-profile {
 	cursor:pointer;
 }
 
@@ -69,7 +65,7 @@ section > #signup-box {
 	height:25px;
 }
 
-.like-box {
+.like-box, .comment-box {
 	cursor:pointer;
 }
 

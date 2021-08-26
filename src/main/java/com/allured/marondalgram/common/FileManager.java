@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileManager {
 
-	private final String FILE_UPLOAD_PATH = "C:\\Users\\이주용\\Desktop\\fileUpload/";
+	private final String FILE_UPLOAD_PATH = "C:\\Users\\이주용\\Desktop\\fileUpload\\images/";
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -40,6 +40,6 @@ public class FileManager {
 			e.printStackTrace();
 		}
 		
-		return "/images" + directoryName + file.getOriginalFilename();
+		return "/images/" + directoryName + file.getOriginalFilename();
 	}
 }
