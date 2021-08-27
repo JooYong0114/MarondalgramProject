@@ -8,7 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.allured.marondalgram.common.FileManager;
 import com.allured.marondalgram.feed.dao.FeedDAO;
+import com.allured.marondalgram.feed.model.Comment;
 import com.allured.marondalgram.feed.model.Feed;
+import com.allured.marondalgram.feed.model.Like;
 
 @Service
 public class FeedBO {
@@ -26,6 +28,10 @@ public class FeedBO {
 		return feedDAO.insertFeed(userId, userNickname, content, filePath);
 	}
 	
+	public int deleteFeed(int id) {
+		return feedDAO.deleteFeed(id);
+	}
+	
 	public List<Feed> getFeedList() {
 		return feedDAO.selectFeedList();
 	}
@@ -34,11 +40,27 @@ public class FeedBO {
 		return feedDAO.insertLike(feedId, userId);
 	}
 	
-	public int getLikeCount(int feedId, int userId) {
-		return feedDAO.selectLikeCount(feedId, userId);
+	public List<Like> getLikeList() {
+		return feedDAO.selectLikeList();
 	}
 	
 	public int deleteLike(int feedId, int userId) {
 		return feedDAO.deleteLike(feedId, userId);
+	}
+	
+	public int deleteLikeIfDeleteFeed(int feedId) {
+		return feedDAO.deleteLikeIfDeleteFeed(feedId);
+	}
+	
+	public int addComment(int userId, String userNickname, int feedId, String comment) {
+		return feedDAO.insertComment(userId, userNickname, feedId, comment);
+	}
+	
+	public List<Comment> getCommentList() {
+		return feedDAO.selectCommentList();
+	}
+	
+	public int deleteCommentIfDeleteFeed(int feedId) {
+		return feedDAO.deleteCommentIfDeleteFeed(feedId);
 	}
 }

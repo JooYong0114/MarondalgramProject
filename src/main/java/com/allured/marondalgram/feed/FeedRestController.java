@@ -1,9 +1,11 @@
 package com.allured.marondalgram.feed;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allured.marondalgram.feed.bo.FeedBO;
-import com.allured.marondalgram.feed.model.Feed;
 
 @RestController
 @RequestMapping("/feed")
@@ -50,37 +51,71 @@ public class FeedRestController {
 		return result;
 	}
 	
-	@GetMapping("/like_statement")
-	public Map<String, String> likeStatement(@RequestParam("feedId") int feedId
+	@GetMapping("/delete_feed")
+	public void deleteFeed(@RequestParam("id") int id,
+			HttpServletResponse response) throws IOException {
+		int deleteCount = feedBO.deleteFeed(id);
+		
+		if(deleteCount == 1) {
+			feedBO.deleteLikeIfDeleteFeed(id);
+			feedBO.deleteCommentIfDeleteFeed(id);
+			response.sendRedirect("/feed/main_view");
+		}
+		else {
+			return;
+		}
+	}
+	
+	@GetMapping("/like_add")
+	public Map<String, String> likeAdd(@RequestParam("feedId") int feedId
 			, @RequestParam("userId") int userId
 			, HttpServletRequest request
 			, Model model) {
-		Feed feed = new Feed();
-		feedId = feed.getId();
-		
-		HttpSession hs = request.getSession();
-		userId = (Integer)hs.getAttribute("userId");
 		
 		int insertCount = feedBO.addLike(feedId, userId);
-		int likeCount = feedBO.getLikeCount(feedId, userId);
-		int deleteCount = feedBO.deleteLike(feedId, userId);
-		
-		model.addAttribute("likeCount", likeCount);
 		
 		Map<String, String> result = new HashMap<>();
 		
 		if(insertCount == 1) {
-			result.put("insertResult", "insert success");
+			result.put("result", "insert success");
 		}
 		else {
-			result.put("insertResult", "insert fail");
+			result.put("result", "insert fail");
 		}
+		return result;
+	}
+	
+	@GetMapping("/like_delete")
+	public Map<String, String> likeDelete(@RequestParam("feedId") int feedId
+			, @RequestParam("userId") int userId) {
+		
+		int deleteCount = feedBO.deleteLike(feedId, userId);
+		
+		Map<String, String> result = new HashMap<>();
 		
 		if(deleteCount == 1) {
-			result.put("deleteResult", "remove success");
+			result.put("result", "delete success");
 		}
 		else {
-			result.put("deleteResult", "remove fail");
+			result.put("result", "delete fail");
+		}
+		return result;
+	}
+	
+	@PostMapping("/comment_add")
+	public Map<String, String> commentAdd(@RequestParam("userId") int userId
+			, @RequestParam("userNickname") String userNickname
+			, @RequestParam("feedId") int feedId
+			, @RequestParam("comment") String comment) {
+		int insertCount = feedBO.addComment(userId, userNickname, feedId, comment);
+		
+		Map<String, String> result = new HashMap<>();
+		
+		if(insertCount == 1) {
+			result.put("insert", "success");
+		}
+		else {
+			result.put("insert", "fail");
 		}
 		
 		return result;

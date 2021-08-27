@@ -25,6 +25,13 @@
  		)
  	</insert>
  	
+ 	<delete id="deleteFeed" parameterType="int">
+ 		DELETE FROM
+ 			`feed`
+ 		WHERE
+ 			`id` = #{id}
+ 	</delete>
+ 	
  	<select id="selectFeedList" resultType="com.allured.marondalgram.feed.model.Feed">
  		SELECT
  			`id`
@@ -54,14 +61,14 @@
  		)
  	</insert>
  	
- 	<select id="selectLikeCount" parameterType="map" resultType="com.allured.marondalgram.feed.model.Like">
+ 	<select id="selectLikeList" resultType="com.allured.marondalgram.feed.model.Like">
  		SELECT 
- 			COUNT(1)
+ 			`id`
+ 			, `feedId`
+ 			, `userId`
+ 			, `createdAt`
  		FROM
  			`like`
- 		WHERE
- 			`feedId` = ${feedId}
- 		AND `userId` = ${userId}	
  	</select>
  	
  	<delete id="deleteLike" parameterType="int">
@@ -70,5 +77,61 @@
  		WHERE
  			`feedId` = ${feedId}
  		AND `userId` = ${userId}
+ 	</delete>
+ 	
+ 	<delete id="deleteLikeIfDeleteFeed" parameterType="int">
+ 		DELETE FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 	</delete>
+ 	
+ 	<insert id="insertComment" parameterType="map">
+ 		INSERT INTO
+ 			`comment`
+ 		(
+ 			`userId`
+ 			, `userNickname`
+ 			, `feedId`
+ 			, `comment`
+ 			, `createdAt`
+ 			, `updatedAt`
+ 		) VALUES
+ 		(
+ 			#{userId}
+ 			, #{userNickname}
+ 			, #{feedId}
+ 			, #{comment}
+ 			, now()
+ 			, now()
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectCommentList" resultType="com.allured.marondalgram.feed.model.Comment">
+ 		SELECT
+ 			`id`
+ 			, `userId`
+ 			, `userNickname`
+ 			, `feedId`
+ 			, `comment`
+ 			, `createdAt`
+ 			, `updatedAt`
+ 		FROM
+ 			`comment`
+ 	</select>
+ 	
+ 	<delete id="deleteComment" parameterType="int">
+ 		DELETE FROM
+ 			`comment`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 		AND `userId` = ${userId}
+ 	</delete>
+ 	
+ 	<delete id="deleteCommentIfDeleteFeed" parameterType="int">
+ 		DELETE FROM
+ 			`comment`
+ 		WHERE
+ 			`feedId` = ${feedId}
  	</delete>
  </mapper>

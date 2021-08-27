@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.allured.marondalgram.feed.bo.FeedBO;
+import com.allured.marondalgram.feed.model.Comment;
 import com.allured.marondalgram.feed.model.Feed;
+import com.allured.marondalgram.feed.model.Like;
 
 @Controller
 @RequestMapping("/feed")
@@ -22,6 +24,11 @@ public class FeedController {
 		List<Feed> feedList = feedBO.getFeedList();
 		model.addAttribute("feedList", feedList);
 		
+		List<Comment> commentList = feedBO.getCommentList();
+		model.addAttribute("commentList", commentList);
+		
+		List<Like> likeList = feedBO.getLikeList();
+		model.addAttribute("likeList", likeList);
 		return "feed/main";
 	}
 	

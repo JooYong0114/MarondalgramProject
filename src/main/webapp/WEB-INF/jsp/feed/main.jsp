@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>마론달그램 - 메인</title>
 <link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
@@ -16,6 +17,9 @@
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
 		<section class="h-100 d-flex justify-content-center">
 			<article class="d-flex flex-column">
+			
+				<!-- 스토리 목록 -->
+				
 				<div id="story-box" class="d-flex justify-content-around align-items-center mb-3">
 					<c:forEach var="i" begin="0" end="5" step="1">
 					<div id="story-user-profile" class="d-flex flex-column align-items-center">
@@ -31,6 +35,9 @@
 					</div>
 					</c:forEach>
 				</div>
+				
+				<!-- 게시글 올리기 -->
+				
 				<div id="createFeedDiv" class="text-center p-2 mb-3">
 					<label>게시글 만들기</label>
 					<textarea id="contentInput" class="form-control mt-2" rows="5" placeholder="문구 입력..."></textarea>
@@ -43,6 +50,9 @@
 						<button id="feedSubmitBtn" type="submit" class="btn btn-primary" style="width:70px; height:40px;">게시</button>
 					</div>
 				</div>
+				
+				<!-- 피드 목록 -->
+				
 				<c:forEach var="feed" items="${feedList }">
 				<div id="feed-box" class="d-flex flex-column mb-4">
 					<div class="d-flex justify-content-between align-items-center mt-3">
@@ -57,8 +67,27 @@
 					</c:choose>
 						<span class="ml-3"><b>${feed.userNickname }</b></span>
 					</div>
-						<img src="/static/media/more.png" alt="더보기" class="moreBtn feed-profileImgs mr-4">
+					
+					<!-- 피드 수정, 삭제 모달창 -->
+					<i class="im im-menu mr-3" data-toggle="modal" data-target="#feedModal${feed.id }" ></i>
+					
+					<div class="modal fade" id="feedModal${feed.id }" tabindex="-1" role="dialog" aria-hidden="true">
+					  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <a href="/feed/edit_view" class="btn btn-primary w-100 h-100">수정하기</a>
+					      </div>
+					      <div class="modal-body">
+					        <a href="/feed/delete_feed?id=${feed.id }" class="btn btn-danger w-100 h-100">삭제하기</a>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary w-100 h-100" data-dismiss="modal">닫기</button>
+					      </div>
+					    </div>
+					  </div>
 					</div>
+		
+				</div>
 					<div class="w-100">
 					<hr>
 					</div>
@@ -70,20 +99,35 @@
 					<div class="w-100">
 					<hr>
 					</div>
+					
 					<div class="d-flex align-items-center">
-						<script>
-							feedId = ${feed.id }
-							userId = ${feed.userId}
-						</script>
-						<div class="like-box d-flex align-items-center">
+					<!-- 좋아요 -->
+						<div class="like-box d-flex align-items-center" data-feed-id="${feed.id }" data-user-id="${feed.userId }">
 							<img class="ml-4 like-icon" src="/static/media/heart-empty.png" alt="like">
 							<span class="ml-2"><b>좋아요</b></span>
-							<span class="ml-2 like-count">1234</span><b>개</b>
+							<c:set var="likeCount" value="0" />
+							<c:forEach var="like" items="${likeList }">
+							<c:if test="${like.feedId eq feed.id }">
+							<c:set var="likeCount" value="${likeCount + 1 }"/>
+							</c:if>
+							</c:forEach>
+							<c:if test="${likeCount > 0 }">
+							<span class="ml-2 like-count">${likeCount}</span><b>개</b>
+							</c:if>
 						</div>
+					<!-- 댓글 -->
 						<div class="comment-box d-flex align-items-center">
 							<img class="ml-4 comment-icon" src="/static/media/comment-icon.png" alt="comment">
 							<span class="ml-2"><b>댓글</b></span>
-							<span class="ml-2 comment-count"><b>12</b></span><b>개</b>
+							<c:set var="commentCount" value="0" />
+							<c:forEach var="comment" items="${commentList }">
+							<c:if test="${comment.feedId eq feed.id }">
+							<c:set var="commentCount" value="${commentCount + 1 }"/>
+							</c:if>
+							</c:forEach>
+							<c:if test="${commentCount > 0 }">
+							<span class="ml-2 like-count">${commentCount}</span><b>개</b>
+							</c:if>
 						</div>
 					</div>
 					<div class="d-flex mt-2">
@@ -91,22 +135,26 @@
 						<div class="ml-3">${feed.content }</div>
 					</div>
 					<div id="comment-box" class="d-flex flex-column mt-3">
-						<c:forEach var="i" begin="0" end="1" step="1">
+						<c:forEach var="comment" items="${commentList }">
+						<c:if test="${comment.feedId eq feed.id }">
 						<div class="d-flex">
-							<div class="ml-4"><b>${userLoginId }</b></div>
-							<div class="ml-3">피드 잘보고 갑니다~</div>
+							<div class="ml-4"><b>${comment.userNickname }</b></div>
+							<div class="ml-3">${comment.comment }</div>
 						</div>
+						</c:if>
 						</c:forEach>
+						<!-- 댓글 추가 입력 -->
 						<div class="input-group mt-3">
-  							<input type="text" class="form-control commentInput" placeholder="댓글 입력...">
+  							<input type="text" id="commentInput${feed.id }" class="form-control" placeholder="댓글 입력...">
   							<div class="input-group-append">
-    						<button class="btn btn-success commentAddBtn" type="button">추가</button>
+    						<button class="btn btn-success commentAddBtn" type="button" data-feed-id="${feed.id }" data-user-id="${userId }" data-user-nickname="${userNickname }">추가</button>
   							</div>
 						</div>
 					</div>
 				</div>
 			</c:forEach>
 			</article>
+			<!-- 로그인한 유저 프로필 -->
 			<article id="user" class="ml-5">
 				<div class="d-flex align-items-center mt-3 btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<c:choose>
@@ -185,26 +233,72 @@
 			});
 			
 			$(".like-box").on("click", function() {
-				feedId;
-				userId;
 				
 				var likeImg = $(this).children("img");
 				var likeCount = parseInt($(this).children(".like-count").text());
-				// alert(feedId);
-				alert(userId);
+				var feedId = $(this).data("feed-id");
+				var userId = $(this).data("user-id");
 				
 				if(likeImg.attr("src") == "/static/media/heart-empty.png") {
 					likeImg.attr("src", "/static/media/heart-fill.png");
 					$(this).children(".like-count").text(likeCount + 1);
+					goThisUrl("/feed/like_add");
 				}
 				else {
 					likeImg.attr("src", "/static/media/heart-empty.png");
 					$(this).children(".like-count").text(likeCount - 1);
+					goThisUrl("/feed/like_delete");
+				}
+				
+				function goThisUrl(url) {
+					$.ajax({
+						type:"get",
+						url:url,
+						async:false,
+						data:{"feedId":feedId, "userId":userId},
+						success:function(data) {
+							if(data.result == "insert success") {
+								alert("입력 성공");
+							}
+							else if(data.result == "insert fail") {
+								alert("입력 실패");
+							}
+							else if(data.result == "delete success") {
+								alert("삭제 성공");
+							}
+							else {
+								alert("삭제 실패");
+							}
+						},
+						error:function(e) {
+							alert("error");
+						}
+					});
 				}
 			});
 			
 			$(".commentAddBtn").on("click", function() {
+				var userId = $(this).data("user-id");
+				var userNickname = $(this).data("user-nickname")
+				var feedId = $(this).data("feed-id");
+				var comment = $("#commentInput" + feedId).val();
 				
+				$.ajax({
+					type:"post",
+					url:"/feed/comment_add",
+					data:{"userId":userId, "userNickname":userNickname, "feedId":feedId, "comment":comment},
+					success:function(data) {
+						if(data.insert == "success") {
+							location.href="/feed/main_view";
+						}
+						else {
+							alert("댓글 추가에 실패 했습니다.");
+						}
+					},
+					error:function(e) {
+						alert("error");
+					}
+				});
 			});
 			
 		});
