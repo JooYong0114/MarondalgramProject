@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.allured.marondalgram.feed.like.dao.LikeDAO">
+ 	<insert id="insertLike" parameterType="map">
+ 		INSERT INTO
+ 			`like`
+ 		(
+ 			`feedId`
+ 			, `userId`
+ 			, `createdAt`
+ 		) VALUES
+ 		(
+ 			#{feedId}
+ 			, #{userId}
+ 			, now()
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectLikeList" parameterType="int" resultType="com.allured.marondalgram.feed.like.model.Like">
+ 		SELECT
+ 			`id` 
+ 			, `feedId`
+ 			, `userId`
+ 			, `createdAt`
+ 		FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = #{feedId}
+ 	</select>
+ 	
+ 	<delete id="deleteLike" parameterType="int">
+ 		DELETE FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 		AND `userId` = ${userId}
+ 	</delete>
+ 	
+ 	<delete id="deleteLikeIfDeleteFeed" parameterType="int">
+ 		DELETE FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 	</delete>
+</mapper>

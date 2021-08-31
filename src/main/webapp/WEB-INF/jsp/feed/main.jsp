@@ -39,11 +39,11 @@
 				<!-- 게시글 올리기 -->
 				
 				<div id="createFeedDiv" class="text-center p-2 mb-3">
-					<label>게시글 만들기</label>
+					<label><b>게시글 만들기</b></label>
 					<textarea id="contentInput" class="form-control mt-2" rows="5" placeholder="문구 입력..."></textarea>
 					<div class="d-flex justify-content-between align-items-center p-2">
 					<label>
-						<img id="cameraBtn" src="/static/media/camera.png" class="mt-1" style="width:45px; height:45px; cursor:pointer;">
+						<img id="cameraBtn" src="/static/media/camera.png" class="mt-1" style="width:40px; height:40px; cursor:pointer;">
 					</label>
 						<input id="fileInput" type="file" class="d-none" accept="image/*, video/*" multiple onchange="javascript:document.getElementById('fileRoute').value = this.value">
 						<input type="text" readonly="readonly" id="fileRoute" class="mx-2" style="width:95%; border:none;">
@@ -65,20 +65,20 @@
 						<img src="${userProfileUrl }" class="feed-profileImgs ml-4">
 					</c:otherwise>
 					</c:choose>
-						<span class="ml-3"><b>${feed.userNickname }</b></span>
+						<span class="ml-3"><b>${feed.feed.userNickname }</b></span>
 					</div>
 					
 					<!-- 피드 수정, 삭제 모달창 -->
-					<i class="im im-menu mr-3" data-toggle="modal" data-target="#feedModal${feed.id }" ></i>
+					<i class="im im-menu mr-3" data-toggle="modal" data-target="#feedModal${feed.feed.id }" style="cursor:pointer;"></i>
 					
-					<div class="modal fade" id="feedModal${feed.id }" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal fade" id="feedModal${feed.feed.id }" tabindex="-1" role="dialog" aria-hidden="true">
 					  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
 					    <div class="modal-content">
 					      <div class="modal-header">
 					        <a href="/feed/edit_view" class="btn btn-primary w-100 h-100">수정하기</a>
 					      </div>
 					      <div class="modal-body">
-					        <a href="/feed/delete_feed?id=${feed.id }" class="btn btn-danger w-100 h-100">삭제하기</a>
+					        <a href="/feed/delete_feed?id=${feed.feed.id }" class="btn btn-danger w-100 h-100">삭제하기</a>
 					      </div>
 					      <div class="modal-footer">
 					        <button type="button" class="btn btn-secondary w-100 h-100" data-dismiss="modal">닫기</button>
@@ -93,7 +93,7 @@
 					</div>
 					<div class="d-flex justify-content-center align-items-center">
 						<div class="w-100 feed-imgVideo">
-							<img class="w-100 h-100" src="${feed.imgUrl }" alt="feedImage">
+							<img class="w-100 h-100" src="${feed.feed.imgUrl }" alt="feedImage">
 						</div>
 					</div>
 					<div class="w-100">
@@ -102,14 +102,12 @@
 					
 					<div class="d-flex align-items-center">
 					<!-- 좋아요 -->
-						<div class="like-box d-flex align-items-center" data-feed-id="${feed.id }" data-user-id="${feed.userId }">
-							<img class="ml-4 like-icon" src="/static/media/heart-empty.png" alt="like">
+						<div class="like-box d-flex align-items-center" data-feed-id="${feed.feed.id }" data-user-id="${feed.feed.userId }">
+							<img class="ml-4 like-icon" src="/static/media/heart-empty.png" alt="heart-empty">
 							<span class="ml-2"><b>좋아요</b></span>
 							<c:set var="likeCount" value="0" />
-							<c:forEach var="like" items="${likeList }">
-							<c:if test="${like.feedId eq feed.id }">
+							<c:forEach var="like" items="${feed.likeList }">
 							<c:set var="likeCount" value="${likeCount + 1 }"/>
-							</c:if>
 							</c:forEach>
 							<c:if test="${likeCount > 0 }">
 							<span class="ml-2 like-count">${likeCount}</span><b>개</b>
@@ -120,10 +118,8 @@
 							<img class="ml-4 comment-icon" src="/static/media/comment-icon.png" alt="comment">
 							<span class="ml-2"><b>댓글</b></span>
 							<c:set var="commentCount" value="0" />
-							<c:forEach var="comment" items="${commentList }">
-							<c:if test="${comment.feedId eq feed.id }">
+							<c:forEach var="comment" items="${feed.commentList }">
 							<c:set var="commentCount" value="${commentCount + 1 }"/>
-							</c:if>
 							</c:forEach>
 							<c:if test="${commentCount > 0 }">
 							<span class="ml-2 like-count">${commentCount}</span><b>개</b>
@@ -131,23 +127,23 @@
 						</div>
 					</div>
 					<div class="d-flex mt-2">
-						<div class="ml-4"><b>${feed.userNickname }</b></div>
-						<div class="ml-3">${feed.content }</div>
+						<div class="ml-4"><b>${feed.feed.userNickname }</b></div>
+						<div class="ml-3">${feed.feed.content }</div>
 					</div>
 					<div id="comment-box" class="d-flex flex-column mt-3">
-						<c:forEach var="comment" items="${commentList }">
-						<c:if test="${comment.feedId eq feed.id }">
+						<c:forEach var="comment" items="${feed.commentList }">
+						
 						<div class="d-flex">
 							<div class="ml-4"><b>${comment.userNickname }</b></div>
 							<div class="ml-3">${comment.comment }</div>
 						</div>
-						</c:if>
+						
 						</c:forEach>
 						<!-- 댓글 추가 입력 -->
 						<div class="input-group mt-3">
-  							<input type="text" id="commentInput${feed.id }" class="form-control" placeholder="댓글 입력...">
+  							<input type="text" id="commentInput${feed.feed.id }" class="form-control" placeholder="댓글 입력...">
   							<div class="input-group-append">
-    						<button class="btn btn-success commentAddBtn" type="button" data-feed-id="${feed.id }" data-user-id="${userId }" data-user-nickname="${userNickname }">추가</button>
+    						<button class="btn btn-success commentAddBtn" type="button" data-feed-id="${feed.feed.id }" data-user-id="${userId }" data-user-nickname="${userNickname }">추가</button>
   							</div>
 						</div>
 					</div>
@@ -258,16 +254,16 @@
 						data:{"feedId":feedId, "userId":userId},
 						success:function(data) {
 							if(data.result == "insert success") {
-								alert("입력 성공");
+								$(this).load(window.location.href + this);
 							}
 							else if(data.result == "insert fail") {
-								alert("입력 실패");
+								alert("좋아요 실패");
 							}
 							else if(data.result == "delete success") {
-								alert("삭제 성공");
+								$(this).load(window.location.href + this);
 							}
 							else {
-								alert("삭제 실패");
+								alert("좋아요 실패");
 							}
 						},
 						error:function(e) {

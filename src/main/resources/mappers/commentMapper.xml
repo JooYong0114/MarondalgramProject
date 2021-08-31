@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.allured.marondalgram.feed.comment.dao.CommentDAO">
+ 	<insert id="insertComment" parameterType="map">
+ 		INSERT INTO
+ 			`comment`
+ 		(
+ 			`userId`
+ 			, `userNickname`
+ 			, `feedId`
+ 			, `comment`
+ 			, `createdAt`
+ 			, `updatedAt`
+ 		) VALUES
+ 		(
+ 			#{userId}
+ 			, #{userNickname}
+ 			, #{feedId}
+ 			, #{comment}
+ 			, now()
+ 			, now()
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectCommentList" parameterType="int" resultType="com.allured.marondalgram.feed.comment.model.Comment">
+ 		SELECT
+ 			`id`
+ 			, `userId`
+ 			, `userNickname`
+ 			, `feedId`
+ 			, `comment`
+ 			, `createdAt`
+ 			, `updatedAt`
+ 		FROM
+ 			`comment`
+ 		WHERE
+ 			`feedId` = #{feedId}
+ 		ORDER BY `id` DESC
+ 	</select>
+ 	
+ 	<delete id="deleteComment" parameterType="int">
+ 		DELETE FROM
+ 			`comment`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 		AND `userId` = ${userId}
+ 	</delete>
+ 	
+ 	<delete id="deleteCommentIfDeleteFeed" parameterType="int">
+ 		DELETE FROM
+ 			`comment`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 	</delete>
+</mapper>

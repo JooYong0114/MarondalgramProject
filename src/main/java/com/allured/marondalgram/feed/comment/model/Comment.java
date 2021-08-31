@@ -1,4 +1,4 @@
-package com.allured.marondalgram.feed.model;
+package com.allured.marondalgram.feed.comment.model;
 
 import java.util.Date;
 

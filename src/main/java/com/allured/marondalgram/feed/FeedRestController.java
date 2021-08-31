@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allured.marondalgram.feed.bo.FeedBO;
+import com.allured.marondalgram.feed.like.model.Like;
 
 @RestController
 @RequestMapping("/feed")
@@ -69,8 +70,7 @@ public class FeedRestController {
 	@GetMapping("/like_add")
 	public Map<String, String> likeAdd(@RequestParam("feedId") int feedId
 			, @RequestParam("userId") int userId
-			, HttpServletRequest request
-			, Model model) {
+			, HttpServletRequest request) {
 		
 		int insertCount = feedBO.addLike(feedId, userId);
 		
