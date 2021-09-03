@@ -39,7 +39,7 @@ section > #signup-box {
 	border-radius:3px;
 }
 
-#story-user-profile, #feed-user-profile {
+.story-user-profile, .feed-user-profile {
 	cursor:pointer;
 }
 

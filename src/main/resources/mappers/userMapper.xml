@@ -53,4 +53,21 @@
 			`loginId` = #{loginId}
 		AND `password` = #{password}
 	</select>
+	
+	<select id="selectUserInfo" parameterType="String" resultType="com.allured.marondalgram.user.model.User">
+		SELECT
+			`id`
+			, `name`
+			, `nickname`
+			, `profileUrl`
+			, `loginId`
+			, `email`
+			, `password`
+			, `createdAt`
+			, `updatedAt`
+		FROM
+			`user`
+		WHERE
+			`nickname` = #{nickname}
+	</select>
 </mapper>

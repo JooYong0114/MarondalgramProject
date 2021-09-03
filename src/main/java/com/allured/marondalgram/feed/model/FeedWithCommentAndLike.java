@@ -3,12 +3,13 @@ package com.allured.marondalgram.feed.model;
 import java.util.List;
 
 import com.allured.marondalgram.feed.comment.model.Comment;
-import com.allured.marondalgram.feed.like.model.Like;
 
 public class FeedWithCommentAndLike {
 	private Feed feed;
 	private List<Comment> commentList;
-	private List<Like> likeList;
+	private boolean isLike;
+	private int likeCount;
+	private int commentCount;
 	
 	public Feed getFeed() {
 		return feed;
@@ -22,10 +23,22 @@ public class FeedWithCommentAndLike {
 	public void setCommentList(List<Comment> commentList) {
 		this.commentList = commentList;
 	}
-	public List<Like> getLikeList() {
-		return likeList;
+	public boolean isLike() {
+		return isLike;
 	}
-	public void setLikeList(List<Like> likeList) {
-		this.likeList = likeList;
+	public void setLike(boolean isLike) {
+		this.isLike = isLike;
+	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+	public int getCommentCount() {
+		return commentCount;
+	}
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
 	}
 }

@@ -36,20 +36,24 @@ public class FeedBO {
 		return feedDAO.deleteFeed(id);
 	}
 	
-	public List<FeedWithCommentAndLike> getFeedList() {
+	public List<FeedWithCommentAndLike> getFeedList(int userId) {
 		List<Feed> feedList = feedDAO.selectFeedList();
 		
 		List<FeedWithCommentAndLike> feedWithCommentAndLikeList = new ArrayList<>();
 		
 		for(Feed feed : feedList) {
 			List<Comment> commentList = commentBO.getCommentList(feed.getId());	
-			List<Like> likeList = likeBO.getLikeList(feed.getId());
+			boolean isLike = likeBO.existLike(feed.getId(), userId);
+			int feedLikeCount = likeBO.getFeedLikeCount(feed.getId());
+			int feedCommentCount = commentBO.getCommentCount(feed.getId());
 			
 			FeedWithCommentAndLike feedWithCommentAndLike = new FeedWithCommentAndLike();
 			
 			feedWithCommentAndLike.setFeed(feed);
 			feedWithCommentAndLike.setCommentList(commentList);
-			feedWithCommentAndLike.setLikeList(likeList);
+			feedWithCommentAndLike.setLike(isLike);
+			feedWithCommentAndLike.setLikeCount(feedLikeCount);
+			feedWithCommentAndLike.setCommentCount(feedCommentCount);
 			
 			feedWithCommentAndLikeList.add(feedWithCommentAndLike);
 		}
@@ -71,12 +75,8 @@ public class FeedBO {
 	@Autowired
 	private LikeBO likeBO;
 	
-	public int addLike(int feedId, int userId) {
-		return likeBO.addLike(feedId, userId);
-	}
-	
-	public int deleteLike(int feedId, int userId) {
-		return likeBO.deleteLike(feedId, userId);
+	public boolean like(int feedId, int userId) {
+		return likeBO.like(feedId, userId);
 	}
 	
 	public int deleteLikeIfDeleteFeed(int feedId) {

@@ -55,4 +55,13 @@
  		WHERE
  			`feedId` = ${feedId}
  	</delete>
+ 	
+ 	<select id="selectCommentCount" parameterType="int" resultType="int">
+ 		SELECT
+ 			COUNT(1)
+ 		FROM
+ 			`comment`
+ 		WHERE
+ 			`feedId` = ${feedId}
+ 	</select>
 </mapper>

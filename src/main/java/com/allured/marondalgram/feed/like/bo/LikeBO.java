@@ -13,16 +13,31 @@ public class LikeBO {
 	@Autowired
 	private LikeDAO likeDAO;
 	
-	public int addLike(int feedId, int userId) {
-		return likeDAO.insertLike(feedId, userId);
+	public boolean like(int feedId, int userId) {
+		
+		if(this.existLike(feedId, userId)) {
+			likeDAO.deleteLike(feedId, userId);
+			return false;
+		}
+		else {
+			likeDAO.insertLike(feedId, userId);
+			return true;
+		}
 	}
 	
-	public List<Like> getLikeList(int feedId) {
-		return likeDAO.selectLikeList(feedId);
+	public boolean existLike(int feedId, int userId) {
+		int selectCount = likeDAO.seleteLikeCount(feedId, userId);
+		
+		if(selectCount >= 1) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
-	public int deleteLike(int feedId, int userId) {
-		return likeDAO.deleteLike(feedId, userId);
+	public int getFeedLikeCount(int feedId) {
+		return likeDAO.seleteFeedLikeCount(feedId);
 	}
 	
 	public int deleteLikeIfDeleteFeed(int feedId) {

@@ -22,7 +22,7 @@
 				
 				<div id="story-box" class="d-flex justify-content-around align-items-center mb-3">
 					<c:forEach var="i" begin="0" end="5" step="1">
-					<div id="story-user-profile" class="d-flex flex-column align-items-center">
+					<div class="d-flex flex-column align-items-center story-user-profile">
 					<c:choose>
 					<c:when test="${userProfileUrl eq null }">
 						<img src="/static/media/defaultProfileImg.png" alt="default" class="story-profileImgs">
@@ -56,7 +56,7 @@
 				<c:forEach var="feed" items="${feedList }">
 				<div id="feed-box" class="d-flex flex-column mb-4">
 					<div class="d-flex justify-content-between align-items-center mt-3">
-					<div id="feed-user-profile" class="d-flex align-items-center">
+					<div class="d-flex align-items-center feed-user-profile" data-user-nickname="${feed.feed.userNickname }">
 					<c:choose>
 					<c:when test="${userProfileUrl eq null }">
 						<img src="/static/media/defaultProfileImg.png" alt="default" class="feed-profileImgs ml-4">
@@ -93,7 +93,7 @@
 					</div>
 					<div class="d-flex justify-content-center align-items-center">
 						<div class="w-100 feed-imgVideo">
-							<img class="w-100 h-100" src="${feed.feed.imgUrl }" alt="feedImage">
+							<img class="w-100 h-100 feedImg" src="${feed.feed.imgUrl }" alt="feedImage" data-feed-id=${feed.feed.id }>
 						</div>
 					</div>
 					<div class="w-100">
@@ -102,27 +102,26 @@
 					
 					<div class="d-flex align-items-center">
 					<!-- 좋아요 -->
-						<div class="like-box d-flex align-items-center" data-feed-id="${feed.feed.id }" data-user-id="${feed.feed.userId }">
-							<img class="ml-4 like-icon" src="/static/media/heart-empty.png" alt="heart-empty">
+						<div class="like-box d-flex align-items-center" data-feed-id="${feed.feed.id }">
+							<c:choose>
+							<c:when test="${feed.like}">
+								<img id="heart-${feed.feed.id }" class="ml-4 like-icon" src="/static/media/heart-fill.png" alt="heart-fill">
+							</c:when>
+							<c:otherwise>
+								<img id="heart-${feed.feed.id }" class="ml-4 like-icon" src="/static/media/heart-empty.png" alt="heart-empty">
+							</c:otherwise>
+							</c:choose>
 							<span class="ml-2"><b>좋아요</b></span>
-							<c:set var="likeCount" value="0" />
-							<c:forEach var="like" items="${feed.likeList }">
-							<c:set var="likeCount" value="${likeCount + 1 }"/>
-							</c:forEach>
-							<c:if test="${likeCount > 0 }">
-							<span class="ml-2 like-count">${likeCount}</span><b>개</b>
+							<c:if test="${feed.likeCount > 0 }">
+							<span class="ml-2 like-count">${feed.likeCount }개</span>
 							</c:if>
 						</div>
 					<!-- 댓글 -->
 						<div class="comment-box d-flex align-items-center">
 							<img class="ml-4 comment-icon" src="/static/media/comment-icon.png" alt="comment">
 							<span class="ml-2"><b>댓글</b></span>
-							<c:set var="commentCount" value="0" />
-							<c:forEach var="comment" items="${feed.commentList }">
-							<c:set var="commentCount" value="${commentCount + 1 }"/>
-							</c:forEach>
-							<c:if test="${commentCount > 0 }">
-							<span class="ml-2 like-count">${commentCount}</span><b>개</b>
+							<c:if test="${feed.commentCount > 0 }">
+							<span class="ml-2 like-count">${feed.commentCount}개</span>
 							</c:if>
 						</div>
 					</div>
@@ -130,7 +129,10 @@
 						<div class="ml-4"><b>${feed.feed.userNickname }</b></div>
 						<div class="ml-3">${feed.feed.content }</div>
 					</div>
-					<div id="comment-box" class="d-flex flex-column mt-3">
+					<c:if test="${feed.commentCount != 0}">
+					<a href="#" class="ml-4 text-secondary">댓글 ${feed.commentCount }개 모두 보기</a>
+					</c:if>
+					<div id="comment-box" class="d-flex flex-column">
 						<c:forEach var="comment" items="${feed.commentList }">
 						
 						<div class="d-flex">
@@ -149,6 +151,7 @@
 					</div>
 				</div>
 			</c:forEach>
+			<button type="button" class="btn btn-info w-100">게시물 더보기</button>
 			</article>
 			<!-- 로그인한 유저 프로필 -->
 			<article id="user" class="ml-5">
@@ -166,7 +169,7 @@
 						<span class="text-secondary ml-3">${userName }</span>
 					</div>
 					<div class="dropdown-menu ml-3 mt-3">
-						<a id="lookProfileBtn" href="/feed/profile_view" class="dropdown-item">프로필 보기</a>
+						<a id="lookProfileBtn" href="/feed/profile_view" class="dropdown-item" data-nickname="${userNickname }">프로필 보기</a>
 						<a href="#" class="dropdown-item">프로필 설정</a>
 						<div class="dropdown-divider"></div>
 						<a id="signoutBtn" href="/user/sign_out" class="dropdown-item">로그아웃</a>
@@ -207,7 +210,7 @@
 					success:function(data) {
 						if(data.result == "success") {
 							alert("게시글 작성 성공!");	
-							// location.href="";
+							location.reload();
 						}
 						else {
 							alert("게시글 작성에 실패 했습니다.")
@@ -221,56 +224,64 @@
 			});
 			
 			$("#lookProfileBtn").on("click", function() {
-				location.href="/feed/profile_view";
+				var myNickname = $(this).data("nickname");
+				
+				location.href="/user/profile_view?nickname=" + myNickname;
 			});
 			
 			$("#signoutBtn").on("click", function() {
 				location.href="/user/sign_out";
 			});
 			
+			$(".feed-user-profile").on("click", function() {
+				var userNickname = $(this).data("user-nickname");
+				
+				location.href="/user/profile_view?nickname=" + userNickname;
+			});
+			
 			$(".like-box").on("click", function() {
 				
-				var likeImg = $(this).children("img");
-				var likeCount = parseInt($(this).children(".like-count").text());
 				var feedId = $(this).data("feed-id");
-				var userId = $(this).data("user-id");
-				
-				if(likeImg.attr("src") == "/static/media/heart-empty.png") {
-					likeImg.attr("src", "/static/media/heart-fill.png");
-					$(this).children(".like-count").text(likeCount + 1);
-					goThisUrl("/feed/like_add");
-				}
-				else {
-					likeImg.attr("src", "/static/media/heart-empty.png");
-					$(this).children(".like-count").text(likeCount - 1);
-					goThisUrl("/feed/like_delete");
-				}
-				
-				function goThisUrl(url) {
-					$.ajax({
-						type:"get",
-						url:url,
-						async:false,
-						data:{"feedId":feedId, "userId":userId},
-						success:function(data) {
-							if(data.result == "insert success") {
-								$(this).load(window.location.href + this);
-							}
-							else if(data.result == "insert fail") {
-								alert("좋아요 실패");
-							}
-							else if(data.result == "delete success") {
-								$(this).load(window.location.href + this);
-							}
-							else {
-								alert("좋아요 실패");
-							}
-						},
-						error:function(e) {
-							alert("error");
+									
+				$.ajax({
+					type:"get",
+					url:"/feed/like",
+					data:{"feedId":feedId},
+					success:function(data) {
+						if(data.result) {
+							$("#heart-" + feedId).attr("src", "/static/media/heart-empty.png");							
 						}
-					});
-				}
+						else {
+							$("#heart-" + feedId).attr("src", "/static/media/heart-fill.png");
+						}
+						location.reload();
+					},
+					error:function(e) {
+						alert("error");
+					}
+				});
+			});
+			
+			$(".feedImg").on("dblclick", function() {
+				var feedId = $(this).data("feed-id");
+				
+				$.ajax({
+					type:"get",
+					url:"/feed/like",
+					data:{"feedId":feedId},
+					success:function(data) {
+						if(data.result) {
+							$("#heart-" + feedId).attr("src", "/static/media/heart-empty.png");							
+						}
+						else {
+							$("#heart-" + feedId).attr("src", "/static/media/heart-fill.png");
+						}
+						location.reload();
+					},
+					error:function(e) {
+						alert("error");
+					}
+				});
 			});
 			
 			$(".commentAddBtn").on("click", function() {

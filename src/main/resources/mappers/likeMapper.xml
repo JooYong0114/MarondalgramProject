@@ -19,12 +19,19 @@
  		)
  	</insert>
  	
- 	<select id="selectLikeList" parameterType="int" resultType="com.allured.marondalgram.feed.like.model.Like">
+ 	<select id="seleteLikeCount" parameterType="int" resultType="int">
  		SELECT
- 			`id` 
- 			, `feedId`
- 			, `userId`
- 			, `createdAt`
+ 			COUNT(1)
+ 		FROM
+ 			`like`
+ 		WHERE
+ 			`feedId` = #{feedId}
+ 		AND `userId` = #{userId}
+ 	</select>
+ 	
+ 	<select id="seleteFeedLikeCount" parameterType="int" resultType="int">
+ 		SELECT
+ 			COUNT(1)
  		FROM
  			`like`
  		WHERE

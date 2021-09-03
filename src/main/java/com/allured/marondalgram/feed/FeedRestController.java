@@ -67,37 +67,22 @@ public class FeedRestController {
 		}
 	}
 	
-	@GetMapping("/like_add")
-	public Map<String, String> likeAdd(@RequestParam("feedId") int feedId
-			, @RequestParam("userId") int userId
+	@GetMapping("/like")
+	public Map<String, Boolean> likeAdd(@RequestParam("feedId") int feedId
 			, HttpServletRequest request) {
 		
-		int insertCount = feedBO.addLike(feedId, userId);
+		HttpSession hs = request.getSession();
+		int userId = (Integer)hs.getAttribute("userId");
 		
-		Map<String, String> result = new HashMap<>();
+		boolean isLike = feedBO.like(feedId, userId);
 		
-		if(insertCount == 1) {
-			result.put("result", "insert success");
+		Map<String, Boolean> result = new HashMap<>();
+		
+		if(isLike) {
+			result.put("result", false);
 		}
 		else {
-			result.put("result", "insert fail");
-		}
-		return result;
-	}
-	
-	@GetMapping("/like_delete")
-	public Map<String, String> likeDelete(@RequestParam("feedId") int feedId
-			, @RequestParam("userId") int userId) {
-		
-		int deleteCount = feedBO.deleteLike(feedId, userId);
-		
-		Map<String, String> result = new HashMap<>();
-		
-		if(deleteCount == 1) {
-			result.put("result", "delete success");
-		}
-		else {
-			result.put("result", "delete fail");
+			result.put("result", true);
 		}
 		return result;
 	}

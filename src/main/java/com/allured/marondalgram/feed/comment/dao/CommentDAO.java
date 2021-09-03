@@ -20,4 +20,6 @@ public interface CommentDAO {
 			, @Param("userId") int userId);
 	
 	public int deleteCommentIfDeleteFeed(@Param("feedId") int feedId);
+	
+	public int selectCommentCount(@Param("feedId") int feedId);
 }

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${userName }(${userNickname }) - marondalgram</title>
+<title>${user.nickname }(${user.name }) - marondalgram</title>
 <link rel="stylesheet" href="/static/css/style.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -21,13 +21,16 @@
 					<img src="/static/media/defaultProfileImg.png" alt="default" class="ml-4" style="width:150px; height:150px; border-radius:150px">
 					<div style="margin-left:15%">
 						<div class="d-flex align-items-center">
-							<h2>${userNickname }</h2>
+							<h2>${user.nickname }</h2>
 							<button type="button" class="btn btn-primary ml-3 mb-2">프로필 편집</button>
 						</div>
 						<div class="mt-3">
 							<span class="mr-3">게시물</span><b>56</b>
 							<span class="mx-3">팔로워</span><b>321</b>
 							<span class="mx-3">팔로잉</span><b>135</b>
+						</div>
+						<div class="mt-4">
+							<span><b>${user.name }</b></span>
 						</div>
 					</div>
 				</div>
