@@ -3,6 +3,8 @@ package com.allured.marondalgram.feed.bo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,8 @@ import com.allured.marondalgram.feed.model.FeedWithCommentAndLike;
 @Service
 public class FeedBO {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private FeedDAO feedDAO;
 	
@@ -32,12 +36,27 @@ public class FeedBO {
 		return feedDAO.insertFeed(userId, userNickname, content, filePath);
 	}
 	
-	public int deleteFeed(int id) {
-		return feedDAO.deleteFeed(id);
+	public boolean deleteFeed(int feedId, int userId) {
+		
+		Feed feed = feedDAO.selectFeed(feedId);
+
+		int feedCount = feedDAO.deleteFeed(feedId, userId);
+		
+		if(feedCount != 1) {
+			return false;
+		}
+		
+		FileManager fileManager = new FileManager();
+		fileManager.removeFile(feed.getImgUrl());
+		
+		likeBO.deleteLikeIfDeleteFeed(feedId);
+		commentBO.deleteCommentIfDeleteFeed(feedId);
+		
+		return true;
 	}
 	
 	public List<FeedWithCommentAndLike> getFeedList(int userId) {
-		List<Feed> feedList = feedDAO.selectFeedList();
+		List<Feed> feedList = feedDAO.selectFeedList();			
 		
 		List<FeedWithCommentAndLike> feedWithCommentAndLikeList = new ArrayList<>();
 		
@@ -52,6 +71,33 @@ public class FeedBO {
 			feedWithCommentAndLike.setFeed(feed);
 			feedWithCommentAndLike.setCommentList(commentList);
 			feedWithCommentAndLike.setLike(isLike);
+			feedWithCommentAndLike.setLikeCount(feedLikeCount);
+			feedWithCommentAndLike.setCommentCount(feedCommentCount);
+			
+			feedWithCommentAndLikeList.add(feedWithCommentAndLike);
+		}
+		
+		return feedWithCommentAndLikeList;
+	}
+	
+	public List<FeedWithCommentAndLike> getFeedListByUserId(int userId) {
+		List<Feed> feedList = feedDAO.selectFeedListByUserId(userId);			
+		
+		List<FeedWithCommentAndLike> feedWithCommentAndLikeList = new ArrayList<>();
+		
+		for(Feed feed : feedList) {
+			List<Comment> commentList = commentBO.getCommentList(feed.getId());	
+			boolean isLike = likeBO.existLike(feed.getId(), userId);
+			int feedCount = feedDAO.selectFeedCount(feed.getId());
+			int feedLikeCount = likeBO.getFeedLikeCount(feed.getId());
+			int feedCommentCount = commentBO.getCommentCount(feed.getId());
+			
+			FeedWithCommentAndLike feedWithCommentAndLike = new FeedWithCommentAndLike();
+			
+			feedWithCommentAndLike.setFeed(feed);
+			feedWithCommentAndLike.setCommentList(commentList);
+			feedWithCommentAndLike.setLike(isLike);
+			feedWithCommentAndLike.setFeedCount(feedCount);
 			feedWithCommentAndLike.setLikeCount(feedLikeCount);
 			feedWithCommentAndLike.setCommentCount(feedCommentCount);
 			

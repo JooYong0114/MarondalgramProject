@@ -1,15 +1,12 @@
 package com.allured.marondalgram.feed;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.allured.marondalgram.feed.bo.FeedBO;
-import com.allured.marondalgram.feed.like.model.Like;
 
 @RestController
 @RequestMapping("/feed")
@@ -53,18 +49,22 @@ public class FeedRestController {
 	}
 	
 	@GetMapping("/delete_feed")
-	public void deleteFeed(@RequestParam("id") int id,
-			HttpServletResponse response) throws IOException {
-		int deleteCount = feedBO.deleteFeed(id);
+	public Map<String, String> deleteFeed(@RequestParam("feedId") int feedId
+			, HttpServletRequest request) {
 		
-		if(deleteCount == 1) {
-			feedBO.deleteLikeIfDeleteFeed(id);
-			feedBO.deleteCommentIfDeleteFeed(id);
-			response.sendRedirect("/feed/main_view");
+		HttpSession hs = request.getSession();
+		int userId = (Integer)hs.getAttribute("userId");
+		
+		Map<String, String> result = new HashMap<>();
+		
+		if(feedBO.deleteFeed(feedId, userId)) {
+			result.put("result", "success");
 		}
 		else {
-			return;
+			result.put("result", "fail");
 		}
+		
+		return result;
 	}
 	
 	@GetMapping("/like")

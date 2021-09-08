@@ -8,6 +8,7 @@ public class FeedWithCommentAndLike {
 	private Feed feed;
 	private List<Comment> commentList;
 	private boolean isLike;
+	private int feedCount;
 	private int likeCount;
 	private int commentCount;
 	
@@ -28,6 +29,12 @@ public class FeedWithCommentAndLike {
 	}
 	public void setLike(boolean isLike) {
 		this.isLike = isLike;
+	}
+	public int getFeedCount() {
+		return feedCount;
+	}
+	public void setFeedCount(int feedCount) {
+		this.feedCount = feedCount;
 	}
 	public int getLikeCount() {
 		return likeCount;

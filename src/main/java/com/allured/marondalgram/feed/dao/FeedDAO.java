@@ -15,7 +15,14 @@ public interface FeedDAO {
 			, @Param("content") String content
 			, @Param("imgUrl") String imageUrl);
 	
-	public int deleteFeed(@Param("id") int id);
+	public int deleteFeed(@Param("id") int id
+			, @Param("userId") int userId);
 	
 	public List<Feed> selectFeedList();
+	
+	public Feed selectFeed(@Param("id") int id);
+	
+	public List<Feed> selectFeedListByUserId(@Param("userId") int userId);
+	
+	public int selectFeedCount(@Param("id") int id);
 }

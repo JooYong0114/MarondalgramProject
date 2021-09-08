@@ -22,10 +22,12 @@
 					<div style="margin-left:15%">
 						<div class="d-flex align-items-center">
 							<h2>${user.nickname }</h2>
-							<button type="button" class="btn btn-primary ml-3 mb-2">프로필 편집</button>
+							<c:if test="${user.nickname eq userNickname }">
+								<button type="button" class="btn btn-primary ml-3 mb-2">프로필 편집</button>
+							</c:if>
 						</div>
 						<div class="mt-3">
-							<span class="mr-3">게시물</span><b>56</b>
+							<span class="mr-3">게시물</span><b>1</b>
 							<span class="mx-3">팔로워</span><b>321</b>
 							<span class="mx-3">팔로잉</span><b>135</b>
 						</div>
@@ -45,8 +47,8 @@
 			<article class="d-flex justify-content-center">
 				<div id="feedList" class="w-50">
 					<div class="d-flex flex-wrap justify-content-between mt-4">
-						<c:forEach var="i" begin="1" end="10">
-						<img src="/static/media/defaultProfileImg.png" alt="default" width=240px height=240px class="mb-4">
+						<c:forEach var="feed" items="${feedList }">
+							<img src="${feed.feed.imgUrl }" alt="userFeedImg" data-toggle="modal" data-target="#exampleModalCenter" width=240px height=240px class="userFeedImg mb-4">
 						</c:forEach>
 					</div>
 				</div>
@@ -83,6 +85,25 @@
 			</article>
 		</section>
 		<c:import url="/WEB-INF/jsp/include/footer.jsp" />
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        ...
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 	</div>
 </body>
 <script>

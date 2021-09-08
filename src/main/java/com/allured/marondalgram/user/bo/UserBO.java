@@ -1,9 +1,15 @@
 package com.allured.marondalgram.user.bo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.allured.marondalgram.common.EncryptUtils;
+import com.allured.marondalgram.feed.comment.model.Comment;
+import com.allured.marondalgram.feed.model.Feed;
+import com.allured.marondalgram.feed.model.FeedWithCommentAndLike;
 import com.allured.marondalgram.user.dao.UserDAO;
 import com.allured.marondalgram.user.model.User;
 
@@ -41,5 +47,9 @@ public class UserBO {
 	
 	public User getUser(String nickname) {
 		return userDAO.selectUserInfo(nickname);
+	}
+	
+	public List<User> getUserList() {
+		return userDAO.selectUserList();
 	}
 }

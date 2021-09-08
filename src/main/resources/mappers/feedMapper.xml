@@ -25,11 +25,12 @@
  		)
  	</insert>
  	
- 	<delete id="deleteFeed" parameterType="int">
+ 	<delete id="deleteFeed" parameterType="map">
  		DELETE FROM
  			`feed`
  		WHERE
  			`id` = #{id}
+ 		AND `userId` = #{userId}
  	</delete>
  	
  	<select id="selectFeedList" resultType="com.allured.marondalgram.feed.model.Feed">
@@ -44,5 +45,43 @@
  		FROM
  			`feed`
  		ORDER BY `id` DESC
+ 	</select>
+ 	
+ 	<select id="selectFeedListByUserId" resultType="com.allured.marondalgram.feed.model.Feed">
+ 		SELECT
+ 			`id`
+ 			, `userId`
+ 			, `userNickname`
+ 			, `imgUrl`
+ 			, `content`
+ 			, `createdAt`
+ 			, `updatedAt`
+ 		FROM
+ 			`feed`
+ 		WHERE `userId` = #{userId}
+ 		ORDER BY `id` DESC
+ 	</select>
+ 	<select id="selectFeed" resultType="com.allured.marondalgram.feed.model.Feed"> 	
+ 		SELECT
+ 			`id`
+ 			, `userId`
+ 			, `userNickname`
+ 			, `imgUrl`
+ 			, `content`
+ 			, `createdAt`
+ 			, `updatedAt`
+ 		FROM
+ 			`feed`
+ 		WHERE
+ 			`id` = #{id}
+ 	</select>
+ 	
+ 	<select id="selectFeedCount" parameterType="int" resultType="int">
+ 		SELECT
+ 			COUNT(1)
+ 		FROM
+ 			`feed`
+ 		WHERE
+ 			`id` = #{id}
  	</select>
  </mapper>

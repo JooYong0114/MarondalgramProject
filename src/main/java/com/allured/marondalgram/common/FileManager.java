@@ -42,4 +42,31 @@ public class FileManager {
 		
 		return "/images/" + directoryName + file.getOriginalFilename();
 	}
+	
+	public void removeFile(String filePath) {
+		String realFilePath = FILE_UPLOAD_PATH + filePath.replace("/images/", "");
+		
+		// 파일 지우기
+		Path path = Paths.get(realFilePath);
+		// 해당 파일이 있는지 확인
+		if(Files.exists(path)) {
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				logger.error("[FileManager saveFile] file delete fail");
+				e.printStackTrace();
+			}
+		}
+		// 디렉토리 지우기
+		path = path.getParent();
+		
+		if(Files.exists(path)) {
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				logger.error("[FileManager saveFile] directory delete fail");
+				e.printStackTrace();
+			}
+		}
+	}
 }

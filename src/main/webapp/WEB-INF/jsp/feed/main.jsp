@@ -17,24 +17,6 @@
 		<c:import url="/WEB-INF/jsp/include/header.jsp" />
 		<section class="h-100 d-flex justify-content-center">
 			<article class="d-flex flex-column">
-			
-				<!-- 스토리 목록 -->
-				
-				<div id="story-box" class="d-flex justify-content-around align-items-center mb-3">
-					<c:forEach var="i" begin="0" end="5" step="1">
-					<div class="d-flex flex-column align-items-center story-user-profile">
-					<c:choose>
-					<c:when test="${userProfileUrl eq null }">
-						<img src="/static/media/defaultProfileImg.png" alt="default" class="story-profileImgs">
-					</c:when>
-					<c:otherwise>
-						<img src="${userProfileUrl }" alt="사용자 프로필" class="story-profileImgs">
-					</c:otherwise>
-					</c:choose>
-						<div>${userNickname }</div>
-					</div>
-					</c:forEach>
-				</div>
 				
 				<!-- 게시글 올리기 -->
 				
@@ -56,7 +38,7 @@
 				<c:forEach var="feed" items="${feedList }">
 				<div id="feed-box" class="d-flex flex-column mb-4">
 					<div class="d-flex justify-content-between align-items-center mt-3">
-					<div class="d-flex align-items-center feed-user-profile" data-user-nickname="${feed.feed.userNickname }">
+					<div class="d-flex align-items-center feed-user-profile" data-id="${feed.feed.userId }" data-nickname="${feed.feed.userNickname }">
 					<c:choose>
 					<c:when test="${userProfileUrl eq null }">
 						<img src="/static/media/defaultProfileImg.png" alt="default" class="feed-profileImgs ml-4">
@@ -68,26 +50,11 @@
 						<span class="ml-3"><b>${feed.feed.userNickname }</b></span>
 					</div>
 					
-					<!-- 피드 수정, 삭제 모달창 -->
-					<i class="im im-menu mr-3" data-toggle="modal" data-target="#feedModal${feed.feed.id }" style="cursor:pointer;"></i>
+					<!-- 피드 더보기 버튼 -->
+					<i class="im im-menu mr-3 moreBtn" data-toggle="modal" data-target="#feedModal" data-feed-id="${feed.feed.id }" style="cursor:pointer;"></i>
 					
-					<div class="modal fade" id="feedModal${feed.feed.id }" tabindex="-1" role="dialog" aria-hidden="true">
-					  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <a href="/feed/edit_view" class="btn btn-primary w-100 h-100">수정하기</a>
-					      </div>
-					      <div class="modal-body">
-					        <a href="/feed/delete_feed?id=${feed.feed.id }" class="btn btn-danger w-100 h-100">삭제하기</a>
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary w-100 h-100" data-dismiss="modal">닫기</button>
-					      </div>
-					    </div>
-					  </div>
-					</div>
 		
-				</div>
+					</div>
 					<div class="w-100">
 					<hr>
 					</div>
@@ -126,7 +93,7 @@
 						</div>
 					</div>
 					<div class="d-flex mt-2">
-						<div class="ml-4"><b>${feed.feed.userNickname }</b></div>
+						<div class="ml-4 feedWriter" data-id="${feed.feed.userId }" data-nickname="${feed.feed.userNickname }" style="cursor:pointer"><b>${feed.feed.userNickname }</b></div>
 						<div class="ml-3">${feed.feed.content }</div>
 					</div>
 					<c:if test="${feed.commentCount != 0}">
@@ -136,7 +103,7 @@
 						<c:forEach var="comment" items="${feed.commentList }">
 						
 						<div class="d-flex">
-							<div class="ml-4"><b>${comment.userNickname }</b></div>
+							<div class="ml-4 commentWriter" data-id="${comment.userId }" data-nickname="${comment.userNickname }" style="cursor:pointer"><b>${comment.userNickname }</b></div>
 							<div class="ml-3">${comment.comment }</div>
 						</div>
 						
@@ -151,7 +118,6 @@
 					</div>
 				</div>
 			</c:forEach>
-			<button type="button" class="btn btn-info w-100">게시물 더보기</button>
 			</article>
 			<!-- 로그인한 유저 프로필 -->
 			<article id="user" class="ml-5">
@@ -169,7 +135,7 @@
 						<span class="text-secondary ml-3">${userName }</span>
 					</div>
 					<div class="dropdown-menu ml-3 mt-3">
-						<a id="lookProfileBtn" href="/feed/profile_view" class="dropdown-item" data-nickname="${userNickname }">프로필 보기</a>
+						<a id="lookProfileBtn" href="/feed/profile_view" class="dropdown-item" data-id="${userId }" data-nickname="${userNickname }">프로필 보기</a>
 						<a href="#" class="dropdown-item">프로필 설정</a>
 						<div class="dropdown-divider"></div>
 						<a id="signoutBtn" href="/user/sign_out" class="dropdown-item">로그아웃</a>
@@ -180,6 +146,22 @@
 		<c:import url="/WEB-INF/jsp/include/footer.jsp" />
 	</div>
 	
+	<!-- 수정, 삭제 모달창 -->
+	<div class="modal fade" id="feedModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+		   <div class="modal-content">
+		     	<div class="modal-header">
+		        	<a href="/feed/edit_view" class="btn btn-primary w-100 h-100">수정하기</a>
+		     	</div>
+	       		<div class="modal-body">
+		        	<a href="#" id="deleteBtn" class="btn btn-danger w-100 h-100">삭제하기</a>
+	       		</div>
+		   		<div class="modal-footer">
+		   			<button type="button" class="btn btn-secondary w-100 h-100" data-dismiss="modal">닫기</button>
+		   		</div>
+			</div>
+		</div>
+	</div>
 	<script>
 		$(document).ready(function() {
 			
@@ -224,9 +206,27 @@
 			});
 			
 			$("#lookProfileBtn").on("click", function() {
-				var myNickname = $(this).data("nickname");
+				var userId = $(this).data("id");
+				var userNickname = $(this).data("nickname");
 				
-				location.href="/user/profile_view?nickname=" + myNickname;
+				location.href="/user/profile_view?userNickname=" + userNickname
+						+ "&userId=" + userId;
+			});
+			
+			$(".feedWriter").on("click", function() {
+				var userId = $(this).data("id");
+				var userNickname = $(this).data("nickname");
+				
+				location.href="/user/profile_view?userNickname=" + userNickname
+						+ "&userId=" + userId;
+			});
+			
+			$(".commentWriter").on("click", function() {
+				var userId = $(this).data("id");
+				var userNickname = $(this).data("nickname");
+				
+				location.href="/user/profile_view?userNickname=" + userNickname
+						+ "&userId=" + userId;
 			});
 			
 			$("#signoutBtn").on("click", function() {
@@ -234,9 +234,40 @@
 			});
 			
 			$(".feed-user-profile").on("click", function() {
-				var userNickname = $(this).data("user-nickname");
+				var userId = $(this).data("id");
+				var userNickname = $(this).data("nickname");
 				
-				location.href="/user/profile_view?nickname=" + userNickname;
+				location.href="/user/profile_view?userNickname=" + userNickname
+						+ "&userId=" + userId;
+			});
+			
+			$(".moreBtn").on("click", function() {
+				var feedId = $(this).data("feed-id");
+				
+				$("#deleteBtn").data("feed-id", feedId);
+			});
+			
+			$("#deleteBtn").on("click", function(e) {
+				e.preventDefault();
+				
+				var feedId = $(this).data("feed-id");
+				
+				$.ajax({
+					type:"get",
+					url:"/feed/delete_feed",
+					data:{"feedId":feedId},
+					success:function(data) {
+						if(data.result == "success") {
+							location.reload();						
+						}
+						else {
+							alert("삭제에 실패 했습니다.");
+						}
+					},
+					error:function(e) {
+						alert("error");
+					}
+				});
 			});
 			
 			$(".like-box").on("click", function() {
